@@ -3,6 +3,11 @@ from store import Store
 
 
 def start(store: Store):
+    """Start the interactive store menu.
+
+    Args:
+        store: Store object to interact with
+    """
     while True:
         print("\nMenu:")
         print("1. List all products in store")
@@ -21,9 +26,13 @@ def start(store: Store):
         elif choice == "3":
             shopping_list = []
             products = store.get_all_products()
-            print("\nEnter the product number and quantity to order. Leave empty to finish.")
+            print(
+                "\nEnter the product number and quantity to order. Leave empty to finish."
+            )
             for idx, product in enumerate(products, 1):
-                print(f"{idx}. {product.name} (price: ${product.price}, quantity: {product.quantity})")
+                print(
+                    f"{idx}. {product.name} (price: ${product.price}, quantity: {product.quantity})"
+                )
             while True:
                 prod_num = input("Product number (or press enter to finish): ").strip()
                 if prod_num == "":
@@ -54,7 +63,7 @@ def start(store: Store):
 
 
 def main():
-    # setup initial stock of inventory
+    """Main function to initialize the store and start the application."""
     product_list = [
         Product("MacBook Air M2", price=1450, quantity=100),
         Product("Bose QuietComfort Earbuds", price=250, quantity=500),
