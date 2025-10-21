@@ -11,14 +11,26 @@ class Product:
             active: Whether the product is active (default: True)
 
         Raises:
+            TypeError: If name is not a string, price is not a number, or quantity is not an integer
             ValueError: If name is empty, price is negative, or quantity is negative
         """
-        if not isinstance(name, str) or not name.strip():
+        # Type checks
+        if not isinstance(name, str):
+            raise TypeError("Name must be a string")
+        if not isinstance(price, (int, float)):
+            raise TypeError("Price must be a number")
+        if not isinstance(quantity, int):
+            raise TypeError("Quantity must be an integer")
+        if not isinstance(active, bool):
+            raise TypeError("Active must be a boolean")
+
+        # Value checks
+        if not name.strip():
             raise ValueError("Name must be a non-empty string")
-        if not isinstance(price, (int, float)) or price < 0:
-            raise ValueError("Price must be a non-negative number")
-        if not isinstance(quantity, int) or quantity < 0:
-            raise ValueError("Quantity must be a non-negative integer")
+        if price < 0:
+            raise ValueError("Price must be non-negative")
+        if quantity < 0:
+            raise ValueError("Quantity must be non-negative")
 
         self.name: str = name.strip()
         self.price: float = float(price)
@@ -41,10 +53,15 @@ class Product:
 
         Raises:
             ValueError: If quantity is negative
+            TypeError: If quantity is not an integer
         """
+        if not isinstance(quantity, int):
+            raise TypeError("Quantity must be an integer")
         if quantity < 0:
             raise ValueError("Quantity must be non-negative")
         self.quantity = quantity
+        if self.quantity == 0:
+            self.deactivate()
 
     def is_active(self) -> bool:
         """Check if the product is active.
@@ -76,8 +93,14 @@ class Product:
             Total cost of the purchase
 
         Raises:
+            TypeError: If quantity is not an integer
             ValueError: If product is not active, quantity is not positive, or insufficient stock
         """
+        # Type check
+        if not isinstance(quantity, int):
+            raise TypeError("Quantity must be an integer")
+
+        # Value checks
         if not self.active:
             raise ValueError(
                 f"Product '{self.name}' is not active and cannot be bought."
@@ -88,5 +111,5 @@ class Product:
             raise ValueError(
                 f"Not enough '{self.name}' in stock. Requested: {quantity}, Available: {self.quantity}"
             )
-        self.quantity -= quantity
+        self.set_quantity(self.quantity - quantity)
         return quantity * self.price
